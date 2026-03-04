@@ -1,0 +1,14 @@
+<CascadingAuthenticationState>
+    <Router AppAssembly="typeof(App).Assembly">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Shared.MainLayout)" />
+        </Found>
+        <NotFound>
+            <LayoutView Layout="typeof(Shared.MainLayout)">
+                <div class="container py-5">
+                    <div class="alert alert-danger">Fant ikke siden</div>
+                </div>
+            </LayoutView>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>

@@ -1,0 +1,46 @@
+@page "/"
+@using ZikiBlog.Data
+@using ZikiBlog.Models
+@inject IPostRepository PostsRepo
+
+<div class="container py-4">
+    <h1 class="display-6">Blogg</h1>
+    @if (items is null)
+    {
+        <div class="text-secondary">Laster…</div>
+    }
+    else if (!items.Any())
+    {
+        <div class="alert alert-info mt-3">Ingen innlegg ennå.</div>
+    }
+    else
+    {
+        <div class="row row-cols-1 g-4 mt-1">
+            @foreach (var p in items)
+            {
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h2 class="card-title h4"><a class="text-decoration-none" href=@($"/post/{p.Slug}")>@p.Title</a></h2>
+                            <p class="card-subtitle text-muted mb-2">Publisert @p.PublishedAt?.ToString("yyyy-MM-dd")</p>
+                            @if (!string.IsNullOrWhiteSpace(p.Summary))
+                            {
+                                <p class="card-text">@p.Summary</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private IEnumerable<Post>? items;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var (list, total) = await PostsRepo.GetPagedAsync(1, 10, onlyPublished: true);
+        items = list;
+    }
+}

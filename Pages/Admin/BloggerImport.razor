@@ -1,0 +1,104 @@
+@page "/admin/import"
+@attribute [Authorize(Roles = "Admin")]
+@using ZikiBlog.Services
+@inject BloggerImportService ImportService
+
+<div class="container py-4">
+    <h1 class="h3 mb-3">Importer fra Blogger</h1>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <EditForm Model="model" OnValidSubmit="OnSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                @if (!string.IsNullOrEmpty(message))
+                {
+                    <div class="alert alert-success mb-3">@message</div>
+                }
+
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label class="form-label">Takeout Blogger Folder Path</label>
+                        <input class="form-control" 
+                               placeholder="C:\Users\yourname\Downloads\Takeout\Blogger" 
+                               @bind="model.TakeoutPath" />
+                        <div class="form-text">
+                            Skriv inn full sti til Blogger-mappen fra Google Takeout-nedlastingen
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary" disabled="@isImporting">
+                            @if (isImporting)
+                            {
+                                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                <span>Importerer...</span>
+                            }
+                            else
+                            {
+                                <span>Importer innlegg</span>
+                            }
+                        </button>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Slik importerer du</h5>
+            <ol class="mb-0">
+                <li>Last ned bloggdataene dine fra <a href="https://takeout.google.com" target="_blank">Google Takeout</a></li>
+                <li>Velg Blogger og last ned</li>
+                <li>Pakk ut zip-filen</li>
+                <li>Kopier stien til Blogger-mappen</li>
+                <li>Lim inn ovenfor og klikk Importer</li>
+            </ol>
+        </div>
+    </div>
+</div>
+
+@code {
+    private ImportModel model = new() { TakeoutPath = @"C:\Users\joste\Downloads\takeout-20260304T145108Z-3-001\Takeout\Blogger" };
+    private string? message;
+    private bool isImporting = false;
+
+    private async Task OnSubmit()
+    {
+        if (string.IsNullOrWhiteSpace(model.TakeoutPath))
+        {
+            message = "Sti til Takeout-mappe er påkrevd";
+            return;
+        }
+
+        if (!Directory.Exists(model.TakeoutPath))
+        {
+            message = "Den angitte mappen finnes ikke";
+            return;
+        }
+
+        try
+        {
+            isImporting = true;
+            message = null;
+            StateHasChanged();
+
+            var count = await ImportService.ImportFromTakeoutAsync(model.TakeoutPath);
+            message = $"Vellykket import av {count} innlegg!";
+        }
+        catch (Exception ex)
+        {
+            message = $"Import mislyktes: {ex.Message}";
+        }
+        finally
+        {
+            isImporting = false;
+        }
+    }
+
+    private class ImportModel
+    {
+        public string TakeoutPath { get; set; } = string.Empty;
+    }
+}

@@ -1,0 +1,32 @@
+@page
+@model ZikiBlog.Pages.Auth.LoginModel
+@{
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+<div class="container py-5 d-flex justify-content-center">
+    <div class="col-12 col-sm-10 col-md-8 col-lg-5">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h1 class="h4 mb-3 text-center">Logg inn</h1>
+                @if (Model.HasError)
+                {
+                    <div class="alert alert-danger">Ugyldig brukernavn eller passord</div>
+                }
+                <form method="post" action="/auth/signin">
+                    @Html.AntiForgeryToken()
+                    <div class="mb-3">
+                        <label class="form-label">Brukernavn</label>
+                        <input class="form-control" name="Username" autocomplete="username" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Passord</label>
+                        <input class="form-control" type="password" name="Password" autocomplete="current-password" />
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Logg inn</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
