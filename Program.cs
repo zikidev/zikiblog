@@ -3,7 +3,6 @@ using System.Security.Claims;
 using Dapper;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Mvc;
@@ -25,13 +24,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     {
         options.LoginPath = "/auth/login";
         options.LogoutPath = "/auth/signout";
-        options.SlidingExpiration = true;
+        options.ExpireTimeSpan = TimeSpan.FromDays(7);
     });
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
-});
+builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<AuthenticationStateProvider, ServerAuthenticationStateProvider>();
 
@@ -43,6 +39,7 @@ builder.Services.AddScoped<IPostRepository, PostgresPostRepository>();
 
 builder.Services.AddScoped<SlugService>();
 builder.Services.AddScoped<BloggerImportService>();
+builder.Services.AddScoped<UserService>();
 
 builder.Services.AddHttpContextAccessor();
 

@@ -2,12 +2,13 @@
 @using ZikiBlog.Data
 @using ZikiBlog.Models
 @inject IPostRepository PostsRepo
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
 
-<div class="container py-4">
-    <h1 class="display-6">Blogg</h1>
+<div class="container py-5">
+    <h1 class="section-title display-6">Blogg</h1>
     @if (items is null)
     {
-        <div class="text-secondary">Laster…</div>
+        <div class="loading-placeholder">Laster…</div>
     }
     else if (!items.Any())
     {
@@ -19,13 +20,15 @@
             @foreach (var p in items)
             {
                 <div class="col">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body">
-                            <h2 class="card-title h4"><a class="text-decoration-none" href=@($"/post/{p.Slug}")>@p.Title</a></h2>
-                            <p class="card-subtitle text-muted mb-2">Publisert @p.PublishedAt?.ToString("yyyy-MM-dd")</p>
+                    <div class="post-card">
+                        <div class="card-body p-4">
+                            <h2 class="post-card-title h4">
+                                <a href=@($"/post/{p.Slug}")>@p.Title</a>
+                            </h2>
+                            <div class="post-date">@p.PublishedAt?.ToString("yyyy-MM-dd")</div>
                             @if (!string.IsNullOrWhiteSpace(p.Summary))
                             {
-                                <p class="card-text">@p.Summary</p>
+                                <p class="post-summary">@p.Summary</p>
                             }
                         </div>
                     </div>

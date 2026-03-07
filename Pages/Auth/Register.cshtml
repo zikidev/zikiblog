@@ -1,0 +1,52 @@
+@page
+@model ZikiBlog.Pages.Auth.RegisterModel
+@{
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+<div class="container py-5 d-flex justify-content-center">
+    <div class="col-12 col-sm-10 col-md-8 col-lg-5">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h1 class="h4 mb-3 text-center">Registrer ny bruker</h1>
+                @if (Model.Success)
+                {
+                    <div class="alert alert-success">
+                        Registrering vellykket! Din konto må godkjennes av administrator før du kan logge inn.
+                    </div>
+                    <div class="text-center">
+                        <a href="/auth/login" class="btn btn-primary">Til innlogging</a>
+                    </div>
+                }
+                else
+                {
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        <div class="alert alert-danger">@Model.ErrorMessage</div>
+                    }
+                    <form method="post">
+                        @Html.AntiForgeryToken()
+                        <div class="mb-3">
+                            <label class="form-label">Brukernavn</label>
+                            <input class="form-control" name="Username" autocomplete="username" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Passord</label>
+                            <input class="form-control" type="password" name="Password" autocomplete="new-password" required />
+                            <div class="form-text">Minimum 8 tegn</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Bekreft passord</label>
+                            <input class="form-control" type="password" name="ConfirmPassword" autocomplete="new-password" required />
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Registrer</button>
+                        </div>
+                        <div class="text-center mt-3">
+                            <a href="/auth/login">Har du allerede en konto? Logg inn</a>
+                        </div>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</div>

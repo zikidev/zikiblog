@@ -11,6 +11,7 @@
         <li class="nav-item"><a class="nav-link" href="/">Hjem</a></li>
         <AuthorizeView Roles="Admin">
           <li class="nav-item"><a class="nav-link" href="/admin/posts">Innlegg (Admin)</a></li>
+          <li class="nav-item"><a class="nav-link" href="/admin/users">Brukere (Admin)</a></li>
           <li class="nav-item"><a class="nav-link" href="/admin/import">Importer</a></li>
         </AuthorizeView>
       </ul>
@@ -20,6 +21,7 @@
             <li class="nav-item"><a class="nav-link" href="/auth/signout">Logg ut</a></li>
           </Authorized>
           <NotAuthorized>
+            <li class="nav-item"><a class="nav-link" href="/auth/register">Registrer</a></li>
             <li class="nav-item"><a class="nav-link" href="/auth/login">Logg inn</a></li>
           </NotAuthorized>
         </AuthorizeView>

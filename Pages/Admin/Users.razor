@@ -1,0 +1,129 @@
+@page "/admin/users"
+@using ZikiBlog.Models
+@using ZikiBlog.Services
+@inject UserService UserService
+@inject NavigationManager Navigation
+@attribute [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Admin")]
+
+<div class="container py-4">
+    <h1 class="mb-4">Brukeradministrasjon</h1>
+
+    @if (!string.IsNullOrEmpty(message))
+    {
+        <div class="alert @(isError ? "alert-danger" : "alert-success") alert-dismissible fade show">
+            @message
+            <button type="button" class="btn-close" @onclick="() => message = string.Empty"></button>
+        </div>
+    }
+
+    <div class="card">
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Brukernavn</th>
+                        <th>Rolle</th>
+                        <th>Status</th>
+                        <th>Opprettet</th>
+                        <th>Handlinger</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in users)
+                    {
+                        <tr>
+                            <td>@user.Username</td>
+                            <td>
+                                <span class="badge @(user.Role == "Admin" ? "bg-danger" : "bg-secondary")">
+                                    @user.Role
+                                </span>
+                            </td>
+                            <td>
+                                @if (user.IsApproved)
+                                {
+                                    <span class="badge bg-success">Godkjent</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning text-dark">Venter på godkjenning</span>
+                                }
+                            </td>
+                            <td>@user.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
+                            <td>
+                                @if (!user.IsApproved)
+                                {
+                                    <button class="btn btn-sm btn-success" @onclick="() => ApproveUser(user.Id)">
+                                        Godkjenn
+                                    </button>
+                                }
+                                @if (user.Role != "Admin")
+                                {
+                                    <button class="btn btn-sm btn-danger" @onclick="() => DeleteUser(user.Id)">
+                                        Slett
+                                    </button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            @if (users.Count == 0)
+            {
+                <p class="text-muted text-center py-4">Ingen brukere funnet</p>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<User> users = new();
+    private string message = string.Empty;
+    private bool isError = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadUsers();
+    }
+
+    private async Task LoadUsers()
+    {
+        users = await UserService.GetAllUsersAsync();
+    }
+
+    private async Task ApproveUser(Guid userId)
+    {
+        var success = await UserService.ApproveUserAsync(userId);
+        if (success)
+        {
+            message = "Bruker godkjent";
+            isError = false;
+            await LoadUsers();
+            StateHasChanged();
+        }
+        else
+        {
+            message = "Kunne ikke godkjenne bruker";
+            isError = true;
+            StateHasChanged();
+        }
+    }
+
+    private async Task DeleteUser(Guid userId)
+    {
+        var success = await UserService.DeleteUserAsync(userId);
+        if (success)
+        {
+            message = "Bruker slettet";
+            isError = false;
+            await LoadUsers();
+            StateHasChanged();
+        }
+        else
+        {
+            message = "Kunne ikke slette bruker";
+            isError = true;
+            StateHasChanged();
+        }
+    }
+}
