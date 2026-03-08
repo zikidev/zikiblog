@@ -1,4 +1,4 @@
-/* Grounding Tones Theme - Earthy & Natural */
+﻿/* Grounding Tones Theme - Earthy & Natural */
 :root {
     --ground-dark: #3E3732;
     --ground-medium: #6B5D54;
@@ -78,7 +78,7 @@ body {
 }
 
 .post-date::before {
-    content: '?';
+    content: '◆';
     font-size: 0.5rem;
     color: var(--moss);
 }
@@ -138,7 +138,7 @@ body {
 }
 
 .post-meta-item::before {
-    content: '?';
+    content: '●';
     color: var(--moss);
     font-size: 0.6rem;
 }
@@ -151,11 +151,18 @@ body {
 }
 
 .content img {
-    max-width: 100%;
+    width: 100%;
     height: auto;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(62, 55, 50, 0.1);
     margin: 2rem 0;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.content img:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 16px rgba(62, 55, 50, 0.15);
 }
 
 .content h2 {
@@ -199,66 +206,16 @@ body {
     color: var(--ground-medium);
 }
 
-.content code {
-    background: var(--warm-white);
-    color: var(--ground-dark);
-    padding: 0.2rem 0.4rem;
+/* Image Modal Styling */
+#imageModal .modal-dialog {
+    max-width: 95vw;
+}
+
+#imageModal .modal-content {
+    background: rgba(0, 0, 0, 0.95);
+}
+
+#imageModal img {
+    cursor: default;
     border-radius: 4px;
-    font-size: 0.9em;
-    border: 1px solid var(--sand);
-}
-
-.content pre {
-    background: var(--ground-dark);
-    color: var(--warm-white);
-    padding: 1.5rem;
-    border-radius: 8px;
-    overflow-x: auto;
-    margin: 2rem 0;
-}
-
-.content pre code {
-    background: transparent;
-    color: inherit;
-    padding: 0;
-    border: none;
-}
-
-/* Section Headers */
-.section-title {
-    color: var(--ground-dark);
-    font-weight: 600;
-    position: relative;
-    padding-bottom: 0.75rem;
-    margin-bottom: 2rem;
-}
-
-.section-title::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 60px;
-    height: 3px;
-    background: linear-gradient(90deg, var(--clay) 0%, var(--moss) 100%);
-    border-radius: 2px;
-}
-
-/* Loading States */
-.loading-placeholder {
-    color: var(--ground-medium);
-    font-style: italic;
-}
-
-/* Alert Styling */
-.alert-info {
-    background: linear-gradient(135deg, #E8F4F8 0%, #D1E7ED 100%);
-    border-left: 4px solid var(--moss);
-    color: var(--ground-dark);
-}
-
-.alert-warning {
-    background: linear-gradient(135deg, #FFF4E6 0%, #FFE8CC 100%);
-    border-left: 4px solid var(--clay);
-    color: var(--ground-dark);
 }
