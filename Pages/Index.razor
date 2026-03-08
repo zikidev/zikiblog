@@ -43,7 +43,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var (list, total) = await PostsRepo.GetPagedAsync(1, 10, onlyPublished: true);
+        var (list, total) = await PostsRepo.GetPagedAsync(1, 100, onlyPublished: true);
         items = list;
     }
 }
