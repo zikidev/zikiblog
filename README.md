@@ -13,3 +13,4 @@ Seed admin (first run): `admin` / `ChangeMe123!` (change immediately).
 - `Program.cs`: `app.UseAntiforgery()` + endpoints `/auth/signin`, `/auth/signout`.
 - `Pages/Auth/Login.cshtml`: Razor Page login with `@Html.AntiForgeryToken()`.
 - Blazor pages under `Pages/*.razor` and shared layout under `Shared/`.
+- Test
